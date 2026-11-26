@@ -7,7 +7,7 @@
 /**
  * Replace the results list with one copy button per GIF.
  * @param {HTMLElement} list
- * @param {import('./providers.js').Gif[]} gifs
+ * @param {import('./giphy.js').Gif[]} gifs
  */
 export function renderResults(list, gifs) {
   const items = gifs.map((gif) => {

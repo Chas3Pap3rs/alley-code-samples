@@ -7,7 +7,7 @@ and then reworked with accessibility, testability, and clarity in mind.
 | Sample | What it shows | Main file |
 | --- | --- | --- |
 | [Before/after slider](./before-after-slider) | UI/UX craft, accessible custom controls, native pointer events in React | [`BeforeAfterSlider.tsx`](./before-after-slider/src/BeforeAfterSlider.tsx) |
-| [Vanilla GIF search](./vanilla-gif-search) | Framework-free JavaScript, browser APIs (Fetch, History, Web Components, Clipboard), async state | [`app.js`](./vanilla-gif-search/src/app.js) |
+| [Vanilla GIF search](./vanilla-gif-search) | Framework-free JavaScript, browser APIs (Fetch, History, Clipboard), async state | [`app.js`](./vanilla-gif-search/src/app.js) |
 | [Price estimator](./price-estimator) | React component architecture with business logic separated from presentation | [`estimator.ts`](./price-estimator/src/estimator.ts) |
 
 ## Running a sample

@@ -2,7 +2,7 @@
   "name": "vanilla-gif-search",
   "private": true,
   "version": "1.0.0",
-  "description": "Framework-free GIF search across GIPHY and Tenor, with API keys kept server-side.",
+  "description": "Framework-free GIPHY search, with the API key kept server-side.",
   "type": "module",
   "engines": { "node": ">=20" },
   "scripts": {

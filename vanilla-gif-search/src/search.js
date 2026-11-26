@@ -1,4 +1,4 @@
-import { PROVIDERS, buildSearchUrl } from './providers.js';
+import { buildSearchUrl, parseGiphyResponse } from './giphy.js';
 
 export class SearchError extends Error {}
 
@@ -7,18 +7,15 @@ export class SearchError extends Error {}
  * Throws SearchError for HTTP failures so the UI can show a friendly message;
  * AbortError passes through untouched so superseded searches can be ignored.
  *
- * @param {{ provider: string, query: string, proxyBaseUrl: string, signal?: AbortSignal, fetchImpl?: typeof fetch }} options
- * @returns {Promise<import('./providers.js').Gif[]>}
+ * @param {{ query: string, proxyBaseUrl: string, signal?: AbortSignal, fetchImpl?: typeof fetch }} options
+ * @returns {Promise<import('./giphy.js').Gif[]>}
  */
-export async function searchGifs({ provider, query, proxyBaseUrl, signal, fetchImpl = fetch }) {
-  const adapter = PROVIDERS[provider];
-  if (!adapter) throw new SearchError(`Unknown provider "${provider}".`);
-
-  const response = await fetchImpl(buildSearchUrl(proxyBaseUrl, provider, query), { signal });
+export async function searchGifs({ query, proxyBaseUrl, signal, fetchImpl = fetch }) {
+  const response = await fetchImpl(buildSearchUrl(proxyBaseUrl, query), { signal });
   if (!response.ok) {
-    throw new SearchError(`${adapter.label} search failed (HTTP ${response.status}).`);
+    throw new SearchError(`GIPHY search failed (HTTP ${response.status}).`);
   }
-  return adapter.parse(await response.json());
+  return parseGiphyResponse(await response.json());
 }
 
 /**

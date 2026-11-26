@@ -15,7 +15,6 @@ const jsonResponse = (body, ok = true, status = 200) => ({ ok, status, json: asy
 function setup({ url = '/', fetchImpl = vi.fn(async () => jsonResponse(giphyPayload([]))) } = {}) {
   document.body.innerHTML = body;
   history.replaceState({}, '', url);
-  localStorage.clear();
   const clipboard = { writeText: vi.fn(async () => {}) };
   const ready = initGifSearch({ fetchImpl, clipboard });
   const $ = (selector) => document.querySelector(selector);
@@ -37,23 +36,16 @@ describe('GIF search page', () => {
     expect($('#status').getAttribute('aria-live')).toBe('polite');
   });
 
-  it('gives the provider switch an accessible name and state', () => {
-    const { $ } = setup();
-    const toggle = $('provider-toggle').shadowRoot.querySelector('[role="switch"]');
-    expect(toggle.getAttribute('aria-label')).toBe('Search Tenor instead of GIPHY');
-    expect(toggle.getAttribute('aria-checked')).toBe('false');
-  });
-
   it('searches, renders results, announces the count, and records the search in the URL', async () => {
     const fetchImpl = vi.fn(async () => jsonResponse(giphyPayload(['One', 'Two'])));
     const { $ } = setup({ fetchImpl });
 
     await submit($, 'cats');
 
-    expect(fetchImpl).toHaveBeenCalledWith('/api/giphy/search?q=cats&limit=30', expect.anything());
+    expect(fetchImpl).toHaveBeenCalledWith('/api/search?q=cats&limit=30', expect.anything());
     expect($('#results').querySelectorAll('button.result')).toHaveLength(2);
     expect($('#status').textContent).toBe('2 GIFs for “cats”. Select one to copy its link.');
-    expect(location.search).toBe('?q=cats&provider=giphy');
+    expect(location.search).toBe('?q=cats');
   });
 
   it('shows an empty state', async () => {
@@ -89,13 +81,12 @@ describe('GIF search page', () => {
     expect(clipboard.writeText).toHaveBeenCalledWith('https://g/0.gif');
   });
 
-  it('runs the search in a shared URL on load, including the provider', async () => {
-    const fetchImpl = vi.fn(async () => jsonResponse({ results: [] }));
-    const { ready, $ } = setup({ url: '/?q=owls&provider=tenor', fetchImpl });
+  it('runs the search in a shared URL on load', async () => {
+    const fetchImpl = vi.fn(async () => jsonResponse(giphyPayload([])));
+    const { ready, $ } = setup({ url: '/?q=owls', fetchImpl });
     await ready;
-    expect(fetchImpl).toHaveBeenCalledWith('/api/tenor/search?q=owls&limit=30', expect.anything());
+    expect(fetchImpl).toHaveBeenCalledWith('/api/search?q=owls&limit=30', expect.anything());
     expect($('#search-input').value).toBe('owls');
-    expect($('provider-toggle').value).toBe('tenor');
   });
 
   it('replays the previous search on Back (popstate)', async () => {
@@ -104,21 +95,10 @@ describe('GIF search page', () => {
     await submit($, 'cats');
     await submit($, 'dogs');
 
-    history.replaceState({}, '', '/?q=cats&provider=giphy'); // jsdom's history.back() is async and unreliable.
+    history.replaceState({}, '', '/?q=cats'); // jsdom's history.back() is async and unreliable.
     window.dispatchEvent(new PopStateEvent('popstate'));
     await vi.waitFor(() => expect($('#status').textContent).toContain('“cats”'));
     expect($('#search-input').value).toBe('cats');
-    expect(fetchImpl).toHaveBeenLastCalledWith('/api/giphy/search?q=cats&limit=30', expect.anything());
-  });
-
-  it('switching providers re-runs the current search and remembers the choice', async () => {
-    const fetchImpl = vi.fn(async () => jsonResponse({ results: [], data: [] }));
-    const { $ } = setup({ fetchImpl });
-    await submit($, 'cats');
-
-    $('provider-toggle').shadowRoot.querySelector('button').click();
-    await vi.waitFor(() => expect(fetchImpl).toHaveBeenLastCalledWith('/api/tenor/search?q=cats&limit=30', expect.anything()));
-    expect(localStorage.getItem('gif-search:provider')).toBe('tenor');
-    expect($('#attribution').textContent).toBe('Powered by Tenor');
+    expect(fetchImpl).toHaveBeenLastCalledWith('/api/search?q=cats&limit=30', expect.anything());
   });
 });
