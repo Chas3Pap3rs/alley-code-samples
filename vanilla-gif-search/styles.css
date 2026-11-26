@@ -1,0 +1,193 @@
+:root {
+  --color-text: #1f2328;
+  --color-muted: #59636e;
+  --color-surface: #fdf6f1;
+  --color-accent: #b4501c; /* Meets 4.5:1 contrast on white for button text. */
+  --color-accent-hover: #933f13;
+  --color-error: #b42318;
+  --focus-color: #1a73e8;
+  --radius: 0.5rem;
+  --space: 1rem;
+
+  color-scheme: light;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus-color);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space);
+  top: -3rem;
+  padding: 0.5rem 1rem;
+  background: #ffffff;
+  border-radius: var(--radius);
+}
+
+.skip-link:focus {
+  top: var(--space);
+}
+
+.site-header {
+  padding: calc(var(--space) * 2) var(--space) var(--space);
+  text-align: center;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  letter-spacing: 0.04em;
+  color: var(--color-accent);
+}
+
+.tagline {
+  margin: 0.25rem 0 var(--space);
+  color: var(--color-muted);
+}
+
+.search {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.search label {
+  font-weight: 600;
+}
+
+.search-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.search input {
+  flex: 1 1 14rem;
+  min-height: 2.75rem;
+  padding: 0 0.75rem;
+  border: 2px solid var(--color-muted);
+  border-radius: var(--radius);
+  font: inherit;
+}
+
+.search button {
+  min-height: 2.75rem;
+  padding: 0 1.25rem;
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radius);
+  background: var(--color-accent);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.search button:hover {
+  background: var(--color-accent-hover);
+}
+
+.search button.secondary {
+  background: transparent;
+  color: var(--color-accent);
+}
+
+main {
+  width: 100%;
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 0 var(--space) calc(var(--space) * 2);
+}
+
+.status {
+  min-height: 1.5em;
+  text-align: center;
+  color: var(--color-muted);
+}
+
+.status[data-tone='error'] {
+  color: var(--color-error);
+  font-weight: 600;
+}
+
+/* Masonry-style columns keep each GIF at its natural aspect ratio. */
+.results {
+  columns: 12rem;
+  column-gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.results[aria-busy='true'] {
+  opacity: 0.5;
+}
+
+.results li {
+  break-inside: avoid;
+  margin-bottom: 0.75rem;
+}
+
+.result {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #e8e2dc;
+  cursor: copy;
+}
+
+.result img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 0.2s ease;
+}
+
+.result:hover img,
+.result:focus-visible img {
+  transform: scale(1.03);
+}
+
+.site-footer {
+  padding: var(--space);
+  text-align: center;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .result img {
+    transition: none;
+  }
+}

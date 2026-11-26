@@ -1,0 +1,16 @@
+{
+  "name": "vanilla-gif-search",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Framework-free GIF search across GIPHY and Tenor, with API keys kept server-side.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "jsdom": "^31.0.1",
+    "vitest": "^5.1.2"
+  }
+}
